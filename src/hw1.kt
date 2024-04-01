@@ -6,6 +6,9 @@ fun main() {
 
         if (inputStr == null) {
             continue
+        } else if(inputStr == "help"){
+            println("Введена команда HELP")
+            continue
         } else {
             if (inputStr == "exit") {
                 break
