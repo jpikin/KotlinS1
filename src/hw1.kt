@@ -17,9 +17,9 @@ fun main() {
                 }
                 if (lst[0] == "add") {
                     if (lst[2] == "phone")
-                        addPhone(lst[2], lst[3])
+                        addPhone(lst[1], lst[3])
                     else if (lst[2] == "email")
-                        addEmail(lst[2], lst[3])
+                        addEmail(lst[1], lst[3])
                     else
                         println("Ошибка ввода")
 
@@ -37,10 +37,10 @@ fun addEmail(s: String, s1: String) {
     }
 }
 
-fun addPhone(str: String, str2: String) {
-    if (str2.startsWith("+")) {
-        if (str2.substring(1, str.length - 1).matches(Regex("""[0-9]+"""))) {
-            println("$str $str2")
+fun addPhone(s: String, s1: String) {
+    if (s1.startsWith("+")) {
+        if (s1.substring(1, s.length - 1).matches(Regex("""[0-9]+"""))) {
+            println("$s $s1")
         } else {
             println("Ошибка в номере телефона")
         }
