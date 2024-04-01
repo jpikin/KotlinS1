@@ -23,6 +23,8 @@ fun main() {
                     else
                         println("Ошибка ввода")
 
+                } else {
+                    println("Введите другую команду")
                 }
             }
         }
