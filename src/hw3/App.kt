@@ -16,22 +16,7 @@ fun main() {
             }
 
             "help" -> {
-                println(
-                    """Список команд:
-                exit - завершить программу
-                help - показать список команд
-                add <Имя> phone <Номер телефона> - добавить контакт с номером телефона
-                add <Имя> email <Адрес электронной почты> - добавить контакт с email адресом
-                          если человек с таким именем уже есть в телефонной книге,
-                          данные этого контакта обновятся.
-                show <Имя> Ищет в записной книге совпадения по имени и выводит информацию о человеке,
-                          если он есть в списке.
-                find <Данные> в данных может содержаться почта или телефон. Команда ищет совпадения в 
-                          записной книжке и выводит данные о человеке, если он есть в списке.
-                addPhone <Имя> <Номер телефона> - добавляет к существующему контакту номер телефона 
-                addEmail <Имя> <Адрес электронной почты> - добавляет к существующему контакту email адрес
-                """
-                )
+                printHelp()
             }
 
             else -> {
@@ -39,6 +24,12 @@ fun main() {
                     val command = readCommand(input ?: "")
                     if (command.isValid()) {
                         when (command) {
+                            is Find -> {
+                                val com = input?.split(" ")
+                                val value = com?.get(1) ?: ""
+                                findPerson(contacts, value)
+                            }
+
                             is AddCommand -> {
                                 val com = input?.split(" ")
                                 val name = com?.get(1) ?: ""
@@ -68,7 +59,8 @@ fun main() {
                                         addInfo(contacts, name, "", value)
                                     }
                                 } else {
-                                    println("Пользователь с именем $name не найден. Воспользуйтесь командой 'add'")
+                                    println("Пользователь с именем $name не найден.\nЧтобы " +
+                                            "добавить нового пользователя воспользуйтесь командой 'add'")
                                 }
                             }
                         }
@@ -80,6 +72,15 @@ fun main() {
                 }
             }
         }
+    }
+}
+
+fun findPerson(list: ArrayList<Person>, value: String) {
+    for(person in list){
+        if(value in person.phones || value in person.emails)
+            println(person)
+        else
+            println("Пользователь с такими данными не найден")
     }
 }
 
@@ -108,27 +109,25 @@ fun showList(list: ArrayList<Person>, name: String?) {
 }
 
 fun addInfo(list: ArrayList<Person>, name: String, phone: String, email: String) {
-    var isNew: Boolean = true
     for (person in list) {
         if (person.name == name) {
-            isNew = false
-            if (phone !in person.phone && phone != "")
-                person.phone.add(phone)
-            if (email !in person.email && email != "")
-                person.email.add(email)
+            if (phone !in person.phones && phone != "")
+                person.phones.add(phone)
+            if (email !in person.emails && email != "")
+                person.emails.add(email)
             println("Данные контакта $name обновлены!")
             return
         }
     }
-    if (isNew) {
-        val phones = arrayListOf<String>()
-        val emails = arrayListOf<String>()
-        if (phone != "") phones.add(phone)
-        if (email != "") emails.add(email)
-        val newPerson = Person(name, phones, emails)
-        list.add(newPerson)
-        println("Новый контакт $name добавлен")
-    }
+
+    val phones = arrayListOf<String>()
+    val emails = arrayListOf<String>()
+    if (phone != "") phones.add(phone)
+    if (email != "") emails.add(email)
+    val newPerson = Person(name, phones, emails)
+    list.add(newPerson)
+    println("Новый контакт $name добавлен")
+
 
 }
 
@@ -136,9 +135,16 @@ fun readCommand(input: String): Command {
     val regexAdd = Regex("""add ([A-z]+) (phone|email) (.+)""")
     val regexShow = Regex("""show ([A-z]+)""")
     val regexAddValues = Regex("""(addPhone|addEmail) ([A-z]+) (.+)""")
+    val regexFind = Regex("""find (.+)""")
 
 
     return when {
+        regexFind.matches(input) -> {
+            val matchResult = regexFind.find(input)!!
+            val value = matchResult.groupValues[1]
+            Find(value)
+        }
+
         regexAddValues.matches(input) -> {
             val matchResult = regexAddValues.find(input)!!
             val value = matchResult.groupValues[3]

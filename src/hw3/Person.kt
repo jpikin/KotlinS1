@@ -1,8 +1,9 @@
 package hw3
 
-data class Person(val name: String, var phone: ArrayList<String>, val email: ArrayList<String>) {
+data class Person(val name: String, var phones: ArrayList<String>, var emails: ArrayList<String>) {
+
     override fun toString(): String {
-        return "Имя: $name\nТелефоны: $phone\nАдреса e-mail: $email\n---------------------"
+        return "Имя: $name\nТелефоны: $phones\nАдреса e-mail: $emails\n---------------------"
 
     }
 }
