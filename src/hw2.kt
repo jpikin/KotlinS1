@@ -1,3 +1,4 @@
+
 class AddCommand(val person: Person): Command(){
     override fun isValid(): Boolean {
         return person.phone.matches(Regex("""[+][0-9]{11}"""))
@@ -83,3 +84,4 @@ fun readCommand(input: String): Command{
         else -> throw IllegalArgumentException("Invalid command format")
     }
 }
+
