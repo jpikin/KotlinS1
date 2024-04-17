@@ -24,6 +24,12 @@ fun main() {
                     val command = readCommand(input ?: "")
                     if (command.isValid()) {
                         when (command) {
+                            is Export -> {
+                                val com = input?.split(" ")
+                                val adress = com?.get(1) ?: ""
+                                export(adress)
+                            }
+
                             is Find -> {
                                 val com = input?.split(" ")
                                 val value = com?.get(1) ?: ""
@@ -73,6 +79,10 @@ fun main() {
             }
         }
     }
+}
+
+fun export(adress: String) {
+
 }
 
 fun findPerson(list: ArrayList<Person>, value: String) {
